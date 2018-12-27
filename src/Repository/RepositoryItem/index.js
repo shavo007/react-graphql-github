@@ -55,6 +55,7 @@ const updateWatch = (
   });
 };
 
+//:💡 Need to update the stars count as it does not come back in the mutation result
 const updateAddStar = (
   client,
   {
@@ -93,7 +94,6 @@ const getUpdatedStarData = (client, id, viewerHasStarred) => {
     id: `Repository:${id}`,
     fragment: REPOSITORY_FRAGMENT,
   });
-
   let { totalCount } = repository.stargazers;
   totalCount = viewerHasStarred ? totalCount + 1 : totalCount - 1;
 
@@ -133,6 +133,7 @@ const RepositoryItem = ({
               ? VIEWER_SUBSCRIPTIONS.UNSUBSCRIBED
               : VIEWER_SUBSCRIPTIONS.SUBSCRIBED,
           }}
+//Throttle your internet connection to showcase optimisticResponse
           optimisticResponse={{
             updateSubscription: {
               __typename: 'Mutation',

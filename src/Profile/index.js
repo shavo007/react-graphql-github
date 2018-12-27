@@ -35,8 +35,9 @@ const Profile = () => (
     query={GET_REPOSITORIES_OF_CURRENT_USER}
     notifyOnNetworkStatusChange={true}
   >
-    {({ data, loading, error, fetchMore }) => {
-      const { viewer } = data;
+    {({ data, loading, error, fetchMore, networkStatus }) => {
+// console.log(`network status is ${networkStatus}`);
+      const { viewer } = data
 
       if (loading && !viewer) {
         return <Loading isCenter={true} />;
