@@ -25,6 +25,12 @@ const GET_REPOSITORIES_OF_CURRENT_USER = gql`
         }
       }
     }
+ rateLimit {
+    limit
+    cost
+    remaining
+    resetAt
+  }
   }
 
   ${REPOSITORY_FRAGMENT}
@@ -37,7 +43,8 @@ const Profile = () => (
   >
     {({ data, loading, error, fetchMore, networkStatus }) => {
 // console.log(`network status is ${networkStatus}`);
-      const { viewer } = data
+      const { viewer, rateLimit } = data
+
 
       if (loading && !viewer) {
         return <Loading isCenter={true} />;
@@ -46,6 +53,8 @@ const Profile = () => (
       if (error) {
         return <ErrorMessage error={error} />;
       }
+
+console.log(`rate limit cost is ${rateLimit.cost}`);
 
       return (
         <RepositoryList
