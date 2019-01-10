@@ -1,11 +1,34 @@
 import React from 'react';
+import {  ApolloConsumer } from 'react-apollo';
+
 import { withState } from 'recompose';
 
 import Button from '../../Button';
 import Comments from '../../Comment';
 import Link from '../../Link';
 
+import { GET_COMMENTS_OF_ISSUE } from '../../Comment/CommentList/queries';
+
+
 import './style.css';
+
+const prefetchIssues = (
+  client,
+  repositoryOwner,
+  repositoryName,
+  issue,
+) => {
+    client.query({
+      query: GET_COMMENTS_OF_ISSUE,
+      variables: {
+         repositoryOwner,
+         repositoryName,
+         number: issue.number,
+      },
+    });
+};
+
+
 
 const IssueItem = ({
   issue,
@@ -14,8 +37,19 @@ const IssueItem = ({
   isShowComments,
   onShowComments,
 }) => (
+ <ApolloConsumer>
+   {client => (
   <div className="IssueItem">
-    <Button onClick={() => onShowComments(!isShowComments)}>
+
+    <Button onClick={() => onShowComments(!isShowComments)}
+   onMouseOver={() =>
+	 prefetchIssues(
+	   client,
+	   repositoryOwner,
+	   repositoryName,
+	   issue
+	 )
+   }>
       {isShowComments ? '-' : '+'}
     </Button>
 
@@ -34,6 +68,8 @@ const IssueItem = ({
       )}
     </div>
   </div>
+  )}
+</ApolloConsumer>
 );
 
 export default withState('isShowComments', 'onShowComments', false)(
